@@ -1,0 +1,9 @@
+# Source downloads are large and can be re-fetched (see SOURCES.md)
+data/raw/
+
+.DS_Store
+__pycache__/
+*.pyc
+
+# Local design-pass test copy (never publish)
+design-pass-test/

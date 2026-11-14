@@ -1,0 +1,76 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Program-to-Career Explorer</title>
+  <meta name="description" content="Pick an academic program and see the occupations it connects to, from public CIP, SOC, BLS, and O*NET data. Generate a one-page brief to start a conversation.">
+  <link rel="stylesheet" href="styles.css">
+</head>
+<body>
+  <header class="site-header">
+    <div class="wrap">
+      <p class="eyebrow">Public data &middot; conversation starter</p>
+      <h1>Program-to-Career Explorer</h1>
+      <p class="lede">Pick an academic program and see the occupations it connects to, how they are projected to grow,
+        what they pay, and what the work involves. Then generate a one-page brief to start a conversation.</p>
+    </div>
+  </header>
+
+  <!-- Stays on screen once a program is chosen and the search has scrolled out of view. -->
+  <div id="progbar" class="progbar no-print" role="region" aria-label="Current program" hidden>
+    <div class="wrap progbar-in">
+      <p id="progbar-title" class="progbar-title"></p>
+      <button id="progbar-change" class="link progbar-change" type="button">Change program</button>
+      <button id="progbar-brief" class="btn btn-primary btn-small btn-go" type="button">Generate conversation brief<svg class="ico" viewBox="0 0 24 24" aria-hidden="true" focusable="false"><path d="M12 5v14M6 13l6 6 6-6"/></svg></button>
+    </div>
+  </div>
+
+  <main class="wrap">
+    <section class="search-panel" aria-label="Find a program">
+      <label for="q" class="search-label">Find a program by name or CIP code</label>
+      <div class="combo">
+        <input id="q" type="search" autocomplete="off" spellcheck="false"
+               placeholder="Try Social Work, Nursing, Data Science, or 52.0201"
+               role="combobox" aria-expanded="false" aria-controls="suggestions" aria-autocomplete="list">
+        <ul id="suggestions" class="suggestions" role="listbox" hidden></ul>
+      </div>
+      <div class="options">
+        <label class="check"><input type="checkbox" id="incl-teach"> Include postsecondary teaching roles</label>
+        <span class="hint">Many programs map to &ldquo;&hellip; Teachers, Postsecondary,&rdquo; which usually requires a doctorate.</span>
+      </div>
+      <p id="bls-note" class="notice" hidden></p>
+    </section>
+
+    <section id="results" aria-live="polite">
+      <div class="empty-state">
+        <p>Start by searching for a program. Examples:
+          <button class="link" data-cip="44.0701">Social Work</button>,
+          <button class="link" data-cip="51.3801">Registered Nursing</button>,
+          <button class="link" data-cip="43.0104">Criminal Justice</button>,
+          <button class="link" data-cip="52.0201">Business Administration</button>.</p>
+      </div>
+    </section>
+
+    <section id="brief-panel" class="brief-panel" hidden aria-labelledby="brief-heading">
+      <div class="brief-toolbar no-print">
+        <h2 id="brief-heading">Conversation brief</h2>
+        <div class="toolbar-buttons">
+          <button id="brief-copy" class="btn">Copy text</button>
+          <button id="brief-download" class="btn">Download .md</button>
+          <button id="brief-print" class="btn">Print or save PDF</button>
+          <button id="brief-close" class="btn btn-quiet" aria-label="Close the brief">Close</button>
+        </div>
+      </div>
+      <article id="brief" class="brief"></article>
+    </section>
+  </main>
+
+  <footer class="site-footer">
+    <div class="wrap" id="sources"></div>
+  </footer>
+
+  <script src="data/explorer-data.js"></script>
+  <script src="app.js"></script>
+</body>
+</html>
