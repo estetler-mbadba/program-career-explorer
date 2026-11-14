@@ -118,7 +118,7 @@
     list.hidden = true;
     input.setAttribute("aria-expanded", "false");
     history.replaceState(null, "", "#cip=" + c.c);
-    $("#brief-panel").hidden = true;
+    setBriefOpen(false);
     render();
     $("#progbar-title").textContent = c.t;
     updateBar();
@@ -164,6 +164,9 @@
     ] : []),
     { key: "jz", label: "Preparation", get: (o) => (o.o ? o.o.jz : null) },
   ];
+  // Preparation is a column in the table only. The phone cards leave it out (it is in each occupation's details),
+  // so the phone sort menu leaves it out too, unless the list is already sorted by it.
+  const phoneSortCols = () => COLS.filter((col) => col.key !== "jz" || state.sortKey === "jz");
 
   function sortOccs(occs) {
     const col = COLS.find((c) => c.key === state.sortKey) || COLS[0];
@@ -249,6 +252,8 @@
       const wLo = s.wageMin == null ? null : fmtInt(s.wageMin / 1000);
       const wHi = s.wageMax == null ? null : fmtInt(s.wageMax / 1000);
       const wageValue = wLo == null ? '<span class="na">&ndash;</span>' : `$${wLo}k${wHi !== wLo ? `&ndash;${wHi}k` : ""}`;
+      // The heading matches what is under it: one occupation or one figure is a wage, a range is wages.
+      const wageLabel = s.n === 1 || (wLo != null && wHi === wLo) ? "Median wage" : "Median wages";
       html += `<p class="group-label"><span class="topic">Summary</span>
         ${s.n === 1 ? "The occupation below, national figures" : "The occupations below taken together, national figures"}</p>
       <div class="tiles">
@@ -258,7 +263,7 @@
           <div class="sub">${yearsLabel()}; all occupations ${fmtPct(BLS.allChg)}</div></div>
         <div class="tile"><div class="label">Openings per year</div><div class="value">${fmtInt(s.openings)}</div>
           <div class="sub">national, growth plus replacement</div></div>
-        <div class="tile"><div class="label">Median wages</div><div class="value">${wageValue}</div>
+        <div class="tile"><div class="label">${wageLabel}</div><div class="value">${wageValue}</div>
           <div class="sub">all occupations $${fmtInt(BLS.allWage)}</div></div>
       </div>`;
     }
@@ -268,7 +273,7 @@
       <span class="meta">${shown.length} shown${hiddenTeaching ? ` &middot; ${hiddenTeaching} postsecondary teaching role${hiddenTeaching > 1 ? "s" : ""} hidden` : ""}
       &middot; select a title for details</span></div>
       <div class="sort-phone"><label for="sort-phone">Sort by</label>
-        <select id="sort-phone">${COLS.map((col) => `<option value="${col.key}"${state.sortKey === col.key ? " selected" : ""}>${esc(col.label)}</option>`).join("")}</select></div>
+        <select id="sort-phone">${phoneSortCols().map((col) => `<option value="${col.key}"${state.sortKey === col.key ? " selected" : ""}>${esc(col.label)}</option>`).join("")}</select></div>
       <div class="table-scroll"><table class="occ"><thead><tr>
       ${COLS.map((col) => {
         const on = state.sortKey === col.key;
@@ -438,12 +443,18 @@
       (s.ul && s.ul.length ? s.ul.map((x) => `- ${x}`).join("\n") + "\n\n" : "")).join("");
   }
 
+  // Opening the brief hides the page's own limits block, because the brief carries the same limits.
+  function setBriefOpen(open) {
+    $("#brief-panel").hidden = !open;
+    $("#results").classList.toggle("brief-open", open);
+  }
+
   let lastBrief = null;
   function showBrief() {
     lastBrief = buildBrief();
     $("#brief").innerHTML = briefToHTML(lastBrief);
     const panel = $("#brief-panel");
-    panel.hidden = false;
+    setBriefOpen(true);
     history.replaceState(null, "", "#cip=" + state.cip.c + "&brief=1");
     panel.scrollIntoView({ behavior: scrollBehavior(), block: "start" });
   }
@@ -464,7 +475,7 @@
   });
   $("#brief-print").addEventListener("click", () => window.print());
   $("#brief-close").addEventListener("click", () => {
-    $("#brief-panel").hidden = true;
+    setBriefOpen(false);
     history.replaceState(null, "", "#cip=" + state.cip.c);
   });
 

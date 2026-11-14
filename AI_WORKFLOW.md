@@ -37,6 +37,12 @@ The review ran on a copy of the page and wrote down every change before anything
 
 Two faults in the brief's wording were fixed at the same time, with the author's approval: a one-occupation program no longer says its wages "range from" a figure to the same figure, and a program with no wage reported no longer prints an empty range.
 
+Three smaller choices the review had held back were made later the same day, with the author's approval:
+
+- On a phone, an occupation's card leaves out its preparation level. It is still in the occupation's details, and the table on wider screens still shows it.
+- The page's own limits block steps aside while the brief is open, because the brief repeats the same limits.
+- The wage box is headed "Median wage" when it shows a single figure, and "Median wages" when it shows a range.
+
 ## A check that was itself wrong
 
 One new check failed on its first run and the data was right. It required every occupation to have an O*NET preparation level. 93 do not: O*NET collects no detail for residual "All Other" occupations or for military occupations. The check now allows a missing level only for those two kinds.
